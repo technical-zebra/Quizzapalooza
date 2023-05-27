@@ -72,10 +72,32 @@ WSGI_APPLICATION = 'Quizzapalooza.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#             'ENGINE': 'django.db.backends.django.db.backends.postgresql',
+#             'NAME': 'quizzapalooza_pgsql',
+#             'USER': 'admin',
+#             'PASSWORD': 'admin',
+#             'HOST': 'localhost',
+#             'PORT': '5432',
+#         }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'quizzapaloozapgsql',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'NAME': 'quizzapalooza_djongo',
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017/',
+        },
     }
 }
 
@@ -111,7 +133,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),

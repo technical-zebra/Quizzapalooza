@@ -15,8 +15,13 @@ sqlparse = "==0.4.4"
 tzdata = "==2023.3"
 virtualenv = "==20.23.0"
 virtualenv-clone = "==0.5.7"
+djongo = "*"
+pymongo = "*"
+psycopg2 = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
+psycopg2 = "*"
 
 [requires]
 python_version = "3.11"

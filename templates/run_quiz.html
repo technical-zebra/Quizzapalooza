@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
-
+{% load static %}
 {% block title %}Run Quiz{% endblock %}
 
 {% block reference %}
-    <link rel="stylesheet" type="text/css" href="../static/css/run_quiz.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/run_quiz.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
-    <script src="../static/js/runQuiz.js"></script>
+    <script src="{% static 'js/runQuiz.js' %}" onload="loadSetting()"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
 {% endblock %}
 
 {% block body %}
