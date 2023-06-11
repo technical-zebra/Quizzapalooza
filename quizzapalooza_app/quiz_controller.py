@@ -2,17 +2,16 @@ import json
 import random
 
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 from .models import Quiz
 
-# - `current_students` is an empty dictionary that will be used to store information about currently
-# connected students.
-current_students = {}
 
 # - `current_sessions` is an empty list that will be used to store information about currently active
 # quiz sessions.
-current_sessions = []
+current_sessions = {}
 
 
 def validate_activation(request):
@@ -42,19 +41,15 @@ def join_quiz(request):
     if request.method == 'POST':
         form = JoinQuizForm(request.POST)
         if form.is_valid():
-            session_id = form.cleaned_data['session_id']
+            session_id = int(form.cleaned_data['session_id'])
             nickname = form.cleaned_data['nickname']
-
-            if session_id not in current_sessions:
+            print(current_sessions)
+            if session_id not in current_sessions.keys():
                 messages.error(request, 'Session does not exist!')
-            elif nickname in current_students:
+            elif nickname in current_sessions[session_id]["students"]:
                 messages.error(request, 'Student already exists!')
             else:
-                current_students[nickname] = 0
-                new_student = User(email=f"{nickname}@student", type="student")
-                new_student.save()
-                login(request, new_student)
-                return redirect('views:start_session', session_id=session_id)
+                return redirect('start_session_with_nickname', session_id=session_id, nickname=nickname)
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -84,24 +79,39 @@ def create_quiz(request):
     return render(request, 'create_quiz.html', {'user': request.user, 'form': form})
 
 
-@login_required(login_url='/quizzapalooza_app/login')
+@login_required(login_url='/login')
 def display_quiz(request):
     quizs = Quiz.objects.all()
     return render(request, 'display_quiz.html', {'quizs': quizs, 'user': request.user})
 
-
+@ login_required(login_url='/login')
 def run_quiz(request):
     session_id = random.randint(20001, 40000)
-    current_sessions.append(session_id)
-    current_students = []
+    while session_id in current_sessions:
+        session_id = random.randint(20001, 40000)
     return redirect('start_session', session_id=session_id)
 
 
-def start_session(request, session_id):
-    return render(request, 'waiting_hall.html', {'user': request.user, 'session_id': session_id})
+def start_session(request, session_id, nickname=''):
+    session_id = int(session_id)
 
+    if request.user.is_authenticated:
+        role = 'teacher'
+        current_sessions[session_id] = {"teachers": [], "students": []}
+        print(current_sessions)
+    else:
+        role = 'student'
+        current_sessions[session_id]["students"].append(nickname)
 
-def run_test(request, qid):
+    identity = {
+        'nickname': str(request.user).split("@")[0] if request.user.is_authenticated else nickname,
+        'role': role
+    }
+    students = current_sessions[session_id]["students"]
+
+    return render(request, 'waiting_hall.html', {'identity': identity, 'students': students, 'session_id':session_id})
+
+def start_quiz(request, session_id, qid=0):
     qid = int(qid)
     quizs = Quiz.objects.all()
     if len(quizs) == 0:
@@ -110,8 +120,8 @@ def run_test(request, qid):
     return render(request, 'run_quiz.html', {'quiz': quizs[qid], 'length': len(quizs), 'user': request.user})
 
 
-def get_leaderboard(request):
-    sorted_students = dict(sorted(current_students.items(), key=lambda item: item[1], reverse=True))
+def get_leaderboard(request, session_id):
+    sorted_students = dict(sorted(current_sessions[session_id]['students'], key=lambda item: item[1], reverse=True))
     print(sorted_students)
     logout(request)
     return render(request, 'leaderboard.html', {'current_students': sorted_students, 'user': request.user})
@@ -138,22 +148,31 @@ def send_answer(request):
         correctness = False
         if ans == example_ans:
             correctness = True
-            current_students[nickname] += 1
+            #current_students[nickname] += 1
         print(f"ans: {ans} ex_ans: {example_ans} correctness: {correctness}")
 
     return JsonResponse({})
 
-
+@csrf_exempt
+@login_required(login_url='/login')
 def delete_quiz(request):
     """
-    This function deletes a quiz from the database if the quiz exists and is owned by the current user.
-    :return: An empty JSON object.
-    """
-    quiz = json.loads(request.body)
-    quiz_id = quiz['quizId']
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-    if quiz:
-        if quiz.user_id == request.user.id:
+        This function deletes a quiz from the database if the quiz exists and is owned by the current user.
+        :return: An empty JSON object.
+        """
+    if request.method == 'POST':
+        quiz_id = json.loads(request.body.decode('utf-8'))['quizId']
+        print(request.body.decode('utf-8'))
+        print(f"quizID: {quiz_id}")
+        try:
+            quiz = Quiz.objects.get(pk=quiz_id)
             quiz.delete()
-
-    return JsonResponse({})
+            redirect_url = '/display_quiz/'
+            messages.success(request, 'Quiz deleted successfully')
+            return JsonResponse({'status': 'success', 'redirectUrl': redirect_url})
+        except Quiz.DoesNotExist:
+            messages.error(request, 'Quiz not found')
+            return JsonResponse({'status': 'error', 'message': 'Quiz not found'})
+    else:
+        messages.error(request, 'Invalid request method')
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})

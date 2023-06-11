@@ -61,22 +61,22 @@ class QuizForm(forms.Form):
     )
     choice1 = forms.CharField(
         label="Choice 1",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "name": "choice1"}),
         required=False,
     )
     choice2 = forms.CharField(
         label="Choice 2",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "name": "choice2"}),
         required=False,
     )
     choice3 = forms.CharField(
         label="Choice 3",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "name": "choice3"}),
         required=False,
     )
     choice4 = forms.CharField(
         label="Choice 4",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "name": "choice4"}),
         required=False,
     )
     answer = forms.ChoiceField(
@@ -130,5 +130,15 @@ class QuizForm(forms.Form):
 
 
 class JoinQuizForm(forms.Form):
-    session_id = forms.IntegerField()
-    nickname = forms.CharField()
+    session_id = forms.IntegerField(
+        required=True,
+        label="Session ID:",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Ënter Session ID"
+                    }
+        )
+    )
+    nickname = forms.CharField(required=True, label="Nickname:", widget=forms.TextInput(
+        attrs={"class": "form-control", "placeholder": "Enter Your Nickname"}))

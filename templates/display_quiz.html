@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% load static %}
+
 {% block title %}Display Quiz{% endblock %}
 
 {% block reference %}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/display_quiz.css' %}">
-    <script src="{% static 'js/displayQuiz.js' %}" onload="loadSetting()"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -45,6 +47,11 @@
         {% endfor %}
 
     </div>
+
+    <script>
+        const deleteQuizUrl = "{% url 'delete_quiz' %}";
+    </script>
+    <script src="{% static 'js/displayQuiz.js' %}"></script>
 
 
 

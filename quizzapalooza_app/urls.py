@@ -11,8 +11,10 @@ urlpatterns = [
     path('display_quiz/', quiz.display_quiz, name='display_quiz'),
     path('run_quiz/', quiz.run_quiz, name='run_quiz'),
     path('leaderboard/', quiz.get_leaderboard, name='leaderboard'),
-    path('send-answer/', quiz.send_answer, name='send_answer'),
-    path('delete-quiz/', quiz.delete_quiz, name='delete_quiz'),
+    path('send_answer/', quiz.send_answer, name='send_answer'),
+    path('delete_quiz/', quiz.delete_quiz, name='delete_quiz'),
+    path('start_session/<int:session_id>/<str:nickname>/', quiz.start_session, name='start_session_with_nickname'),
     path('start_session/<int:session_id>/', quiz.start_session, name='start_session'),
-    path('run_test/<int:qid>/', quiz.run_test, name='run_test'),
+    path('quiz_session/<int:session_id>/<int:qid>/', quiz.start_quiz, name='run_test'),
+    path('join_quiz/', quiz.join_quiz, name='join_quiz')
 ]

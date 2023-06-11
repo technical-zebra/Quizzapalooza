@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
+{% load static %}
 
-{% block reference %}<link rel="stylesheet" type="text/css" href="../static/css/login&register.css">{% endblock %}
+
+{% block reference %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login&register.css' %}">
+{% endblock %}
 
 {% block title %}Join Quiz{% endblock %}
 
@@ -16,19 +20,18 @@
                 <div class="card-body">
 
                     <form method="POST">
+                        {% csrf_token %}
 
 
                         <div class="form-group">
-                            <label for="session_id">Session ID:</label>
-                            <input type="session_id" class="form-control" id="session_id" name="session_id"
-                                   placeholder="Enter Session ID">
+                            {{ form.session_id.label_tag }}
+                            {{ form.session_id }}
                         </div>
 
 
                         <div class="form-group">
-                            <label for="nickname">Nickname:</label>
-                            <input type="nickname" class="form-control" id="nickname" name="nickname"
-                                   placeholder="Enter Your Nickname">
+                            {{ form.nickname.label_tag }}
+                            {{ form.nickname}}
                         </div>
 
 

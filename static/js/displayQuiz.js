@@ -5,10 +5,29 @@
  * function is called.
  */
 function deleteQuiz(quizId) {
-  fetch("/delete-quiz", {
-    method: "POST",
-    body: JSON.stringify({ quizId: quizId }),
-  }).then((_res) => {
-    window.location.href = "/display_quiz";
-  });
+    if (typeof axios === 'undefined') {
+      console.log('Axios is not loaded');
+    } else {
+      console.log('Axios is loaded');
+    }
+
+    console.log("quizId: ", quizId);
+    const data = {
+        quizId: quizId,
+        test: "test"
+    };
+
+  axios.post(deleteQuizUrl, data)
+    .then(response => {
+      if (response.status === 200) {
+        const redirectUrl = response.data.redirectUrl;
+        console.log(response.data);
+        window.location.href = redirectUrl;
+      } else {
+        console.error("Failed to delete quiz.");
+      }
+    })
+    .catch(error => {
+      console.error("An error occurred while deleting the quiz:", error);
+    });
 }

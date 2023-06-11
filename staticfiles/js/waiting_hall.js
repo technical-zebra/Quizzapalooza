@@ -1,21 +1,30 @@
-let identity = ""
+let role = ""
 let nickname = ""
+
 
 /**
  * The function loads settings based on the user's identity and joins a hall using socket.io if the
  * user is a student.
  */
 function loadSetting() {
-    identity = document.getElementById('identity').innerHTML;
-    nickname = document.getElementById('nickname').innerHTML;
+    role = document.getElementById('identity').dataset.role;
+    nickname = document.getElementById('identity').dataset.nickname;
+    console.log("You are ",role," - ", nickname);
 
-    if (identity == "student"){
-        document.getElementById('TeacherBlock').style.display = 'none';
+    let url = `ws://${window.location.host}/ws/socket-server/`
 
-        var socket = io();
+    const lobbySocket = new WebSocket(url)
 
-        socket.emit('join hall', {data: nickname});
+    lobbySocket.onmessage = function (e){
+        let data = JSON.parse(e.data)
+        console.log('Data: ', data)
     }
+
+    // if (identity == "student"){
+    //     document.getElementById('TeacherBlock').style.display = 'none';
+    //
+    //     socket.emit('join hall', {data: nickname});
+    // }
 
 }
 
