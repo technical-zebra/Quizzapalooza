@@ -139,19 +139,9 @@ This will execute the test suite and display the test results in the console.
 
 Explain how the application can be deployed to a production environment. Describe any additional steps or configurations required for deployment, such as setting up a web server or database server.
 
-## Contributing
-
-Provide guidelines for other developers who want to contribute to the project. Include information on how to set up a development environment, coding conventions, and the process for submitting pull requests.
-
-## License
-
-Specify the license under which the project is distributed. For example, you can use the MIT License or any other open-source license that suits your needs.
 
 ## Acknowledgements
 
 If you used any external libraries, frameworks, or resources in your project, acknowledge them here and provide links to their documentation or websites.
 
-## Contact
-
-Provide contact information for the project maintainer or team, such as email addresses or links to social media profiles.
 
