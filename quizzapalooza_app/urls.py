@@ -2,11 +2,11 @@ from django.urls import path
 from . import quiz_controller as quiz, auth_controller as auth
 
 urlpatterns = [
-    path('hello/', quiz.validate_activation),
+    path('hello/', quiz.validate_activation, name='hello'),
     path('', quiz.home, name='home'),
-    path('login/', auth.login_view),
-    path('logout/', auth.logout_view),
-    path('register/', auth.register_view),
+    path('login/', auth.login_view, name='login'),
+    path('logout/', auth.logout_view, name='logout'),
+    path('register/', auth.register_view, name='register'),
     path('create_quiz/', quiz.create_quiz, name='create_quiz'),
     path('display_quiz/', quiz.display_quiz, name='display_quiz'),
     path('run_quiz/', quiz.run_quiz, name='run_quiz'),

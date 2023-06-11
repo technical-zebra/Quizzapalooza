@@ -21,6 +21,8 @@ psycopg2 = "*"
 psycopg2-binary = "*"
 channels = "*"
 daphne = "*"
+pytz = "*"
+six = "*"
 
 [dev-packages]
 psycopg2 = "*"

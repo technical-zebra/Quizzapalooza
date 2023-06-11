@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0eb4ba87406906637067656f1b794caf74f06e68f39a5a823c8963aa1aea4db2"
+            "sha256": "813fc8f07d844bf712e2eebe69892f3ff6052ff3e68c644d0ea12f5fc2143c15"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -452,6 +452,14 @@
             ],
             "version": "==23.2.0"
         },
+        "pytz": {
+            "hashes": [
+                "sha256:1d8ce29db189191fb55338ee6d0387d82ab59f3d00eac103412d64e0ebd0c588",
+                "sha256:a151b3abb88eda1d4e34a9814df37de2a80e301e68ba0fd856fb9b46bfbbbffb"
+            ],
+            "index": "pip_conf_index_global",
+            "version": "==2023.3"
+        },
         "service-identity": {
             "hashes": [
                 "sha256:6e6c6086ca271dc11b033d17c3a8bea9f24ebff920c587da090afc9519419d34",
@@ -472,7 +480,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "index": "pip_conf_index_global",
             "version": "==1.16.0"
         },
         "sqlparse": {

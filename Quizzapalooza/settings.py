@@ -103,13 +103,13 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     },
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'NAME': 'quizzapalooza_djongo',
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017/',
-        },
-    }
+    # 'mongodb': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'quizzapalooza_djongo',
+    #     'CLIENT': {
+    #         'host': 'mongodb://localhost:27017/',
+    #     },
+    # }
 }
 
 # Password validation
