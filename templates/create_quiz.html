@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}Create Quiz{% endblock %}
+
+{% block reference %}
+<script src="{% static 'js/createQuiz.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container text-center">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.question.label_tag }}
+                        {{ form.question }}
+                        <div id="questionHelp" class="form-text">Please enter your question here.</div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        {{ form.quiz_mode.label_tag }}
+                        {{ form.quiz_mode }}
+                    </div>
+                    <div class="mb-3" id="choice1Block">
+                        {{ form.choice1.label_tag  }}
+                        {{ form.choice1 }}
+                        <div id="choiceHelp" class="form-text">Please enter your choice 1 content here.</div>
+                    </div>
+                    <div class="mb-3" id="choice2Block">
+                        {{ form.choice2.label_tag  }}
+                        {{ form.choice2  }}
+                        <div id="choiceHelp" class="form-text">Please enter your choice 2 content here.</div>
+                    </div>
+                    <div class="mb-3" id="choice3Block">
+                        {{ form.choice3.label_tag }}
+                        {{ form.choice3 }}
+                        <div id="choiceHelp" class="form-text">Please enter your choice 3 content here.</div>
+                    </div>
+                    <div class="mb-3" id="choice4Block">
+                        {{ form.choice4.label_tag  }}
+                        {{ form.choice4 }}
+                        <div id="choiceHelp" class="form-text">Please enter your choice 4 content here.</div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.answer.label_tag  }}
+                        {{ form.answer }}
+                        <div id="answerHelp" class="form-text">
+                            Please enter your answer here, must be one of "1" or "2" or "3" or "4".
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

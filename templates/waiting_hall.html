@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block reference %}
+    <link rel="stylesheet" href="{% static '/css/waiting_hall.css' %}">
+{% endblock %}
+
+{% block title %}Waiting Hall{% endblock %}
+
+{% block body %}
+    <div class="container text-center main_structure">
+        <div class="row m_row">
+            <div class="col-4">Current Session ID:</div>
+            <div class="col-8 session_id">{{ session_id }}</div>
+        </div>
+        <div class="row m_row">
+            <div class="col-4">Current Students:</div>
+            <div class="col-8">
+                <div class="container text-center">
+                    <div class="row row-cols-5" id="log">
+                        {% for student in students %}
+                            <div class="col"><div>{{ student }}</div></div>
+                        {% empty %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row m_row teacher_view" id="TeacherBlock">
+            <div class="col-12">
+                <button type="button" class="btn btn-success" onClick="startQuiz()"> Start the Quiz
+                </button>
+            </div>
+        </div>
+        <div id="identity" data-role="{{ identity.role }}" data-nickname="{{ identity.nickname }}"></div>
+    </div>
+
+    <script src="{% static 'js/waiting_hall.js' %}" onload="loadSetting()"></script>
+{% endblock %}
