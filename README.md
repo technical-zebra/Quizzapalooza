@@ -19,6 +19,49 @@ During the development of Quizzapalooza, I encountered several challenges that r
 
 Another challenge I faced was storing and managing quiz and competition data. To handle quiz data, I integrated a PostgreSQL database, ensuring efficient storage and retrieval of quizzes created by educators. For competition data, I utilized MongoDB, a NoSQL database, to store information about competition sessions and participants.
 
+## Screenshots
+### Login Page
+![Login Page](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture1.png "Login Page")
+
+
+### Sign up Page
+![Sign up Page](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture2.png "Sign up Page")
+
+
+### Create quiz Page (multi-choices)
+![Create quiz Page (multi-choices)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture3.png "Create quiz Page (multi-choices)")
+
+
+### Create quiz Page (true or false)
+![Create quiz Page (true or false)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture4.png "Create quiz Page (true or false)")
+
+
+### Display quiz Page
+![Display quiz Page](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture5.png "Display quiz Page")
+
+
+### Waiting hall (Teacher)
+![Create quiz Page (true or false)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture6.png "Create quiz Page (true or false)")
+
+
+### Waiting hall (Student)
+![Waiting hall (Student)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture7.png "Waiting hall (Student)")
+
+
+### Join quiz Page (Student)
+![Join quiz Page (Student)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture8.png "Join quiz Page (Student)")
+
+
+### Run Quiz(Student)
+![Run Quiz(Student)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture8.png "Run Quiz(Student)")
+
+
+### Run Quiz(Teacher)
+![Run Quiz(Teacher)](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture10.png "Run Quiz(Teacher)")
+
+
+### Winner Page
+![Winner Page](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture11.png "Winner Page")
 
 ## Getting Started
 
