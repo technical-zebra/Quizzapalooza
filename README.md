@@ -2,6 +2,23 @@
 
 Quizzapalooza is a web application developed using HTML, CSS, JavaScript, and Django. It provides an interactive learning platform where educators can create quizzes and learners can participate in engaging quiz sessions. The application follows the MVT (Model-View-Template) architecture and incorporates user authentication, quiz management, waiting halls, and competition sessions.
 
+
+## Table of Contents
+- [Key Features](#key-features)
+- [Challenges and Different Implementation Options](#challenges-and-different-implementation-options)
+- [Screenshots](#screenshots)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Setting up the Database](#setting-up-database)
+  - [Running the Application](#running-the-application)
+  - [Running Tests](#running-tests)
+- [Deployment](#deployment)
+  - [Pipeline Overview](#pipeline-overview)
+  - [Deploying to Azure](#deploying-to-azure)
+- [Acknowledgements](#acknowledgements)
+
+
 ## Key Features
 
 - User authentication: Users can create accounts, log in, and log out.
