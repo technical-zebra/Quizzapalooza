@@ -1,7 +1,18 @@
+from channels.routing import URLRouter
+from channels.testing import WebsocketCommunicator
+from django.contrib.auth.models import User
+from django.test import Client
+from django.test import TestCase
+from django.urls import path, re_path
+from django.urls import reverse
+import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-import six
+from quizzapalooza_app.models import Quiz
+from quizzapalooza_app.consumers import QuizConsumer
+from quizzapalooza_app.quiz_controller import get_students_scores
+
 
 class QuizTestCase(TestCase):
     def setUp(self):
@@ -10,10 +21,20 @@ class QuizTestCase(TestCase):
         self.logout_url = reverse('logout')
         self.register_url = reverse('register')
         self.home_url = reverse('home')
-
         self.email = 'test@example.com'
         self.password = '!tesTpassword132'
-        self.user = User.objects.create_user(username=self.email, email=self.email, password=self.password)
+        self.teacher = User.objects.create_user(username=self.email, email=self.email, password=self.password)
+        self.quiz = Quiz.objects.create(user=self.teacher,
+            content="What is this song?",
+            type="MutiChoices",
+            answer_id=1,
+            choice_1_content="Hello",
+            choice_2_content="Someone Like You",
+            choice_3_content="Beat it",
+            choice_4_content="Smooth Criminal")
+
+
+
 
     def test_login_view(self):
         response = self.client.get(self.login_url)
@@ -58,5 +79,20 @@ class QuizTestCase(TestCase):
         self.assertTemplateUsed(response, 'index.html')
         self.assertContains(response, 'Welcome')
 
+    def test_delete_quiz_not_found(self):
+        self.client.force_login(self.teacher)
+        quiz_id = 999
+        response = self.client.post(reverse('delete_quiz'), {'quizId': quiz_id}, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['status'], 'error')
+        self.assertEqual(response.json()['message'], 'Quiz not found')
+
+    def test_delete_quiz_invalid_method(self):
+        self.client.force_login(self.teacher)
+        response = self.client.get(reverse('delete_quiz'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['status'], 'error')
+        self.assertEqual(response.json()['message'], 'Invalid request method')
+
     def tearDown(self):
-        self.user.delete()
+        self.teacher.delete()
