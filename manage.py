@@ -15,6 +15,20 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
+    from django.db import connections
+    from django.db.utils import OperationalError
+
+    def check_database_connection(database_alias):
+        try:
+            connections[database_alias].ensure_connection()
+            print(f"Successfully connected to the {database_alias} database.")
+        except OperationalError:
+            print(f"Failed to connect to the {database_alias} database.")
+
+    # Usage:
+    check_database_connection('default')  # Check PostgreSQL database connection
+
     execute_from_command_line(sys.argv)
 
 

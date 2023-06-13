@@ -42,10 +42,10 @@
     </div>
     <script>
         const startQuizUrl = "{% url 'start_quiz' session_id=session_id nickname=identity.nickname qid=0 %}";
-        const session_id =
-        {{ session_id }}
+        const session_id = {{ session_id }};
+        const teacher_id= "{{ teacher_id }}";
 
         //console.log(startQuizUrl, session_id);
     </script>
-    <script src="{% static 'js/waiting_hall.js' %}?v=3.0" onload="loadSetting()"></script>
+    <script src="{% static 'js/waiting_hall.js' %}?v=3.1" onload="loadSetting()"></script>
 {% endblock %}

@@ -101,15 +101,9 @@ DATABASES = {
         'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
-    },
-    # 'mongodb': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'quizzapalooza_djongo',
-    #     'CLIENT': {
-    #         'host': 'mongodb://localhost:27017/',
-    #     },
-    # }
+    }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

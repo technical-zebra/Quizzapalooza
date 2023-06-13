@@ -17,15 +17,14 @@
             <div class="row row-cols-4">
                 <div class="col timer d-lg-flex justify-content-center">
                     <div id="js_timer">
-                        00:15 s
+                        00:07 s
                     </div>
                 </div>
 
-                <div class="col question" id="qid"><img src="../static/img/question%20mark.png"
-                                                        onload="loadImage({{ quiz.id }}, {{ length }})" width="64"
-                                                        height="64">Question {{ quiz.id }}:
+                <div class="col question" id="qid"><img src="{% static 'img/question mark.png' %}" width="64" height="64">
+                    Question {{ quiz.id }}:
                 </div>
-                <div class="col question">{{ quiz.content }}</div>
+                <div class="col question question-content">{{ quiz.content }}</div>
                 <div class="col"></div>
 
             </div>
@@ -44,11 +43,11 @@
                 </div>
                 <div class="col answer">
                     <button type="button" class="button1" value="1" name="btn"
-                            onclick="SubmitAnswer({{ quiz.id }}, 1, {{ length }})">{{ quiz.choice_1_content }}</button>
+                            onclick="submitAnswer(1)">{{ quiz.choice_1_content }}</button>
                 </div>
                 <div class="col answer">
                     <button type="button" class="button2" value="2" name="btn"
-                            onclick="SubmitAnswer({{ quiz.id }}, 2, {{ length }})">{{ quiz.choice_2_content }}</button>
+                            onclick="submitAnswer(2)">{{ quiz.choice_2_content }}</button>
                 </div>
                 <div class="col">
                 </div>
@@ -59,11 +58,11 @@
                 </div>
                 <div class="col answer">
                     <button type="button" class="button3" value="3" name="btn"
-                            onclick="SubmitAnswer({{ quiz.id }}, 3, {{ length }})">{{ quiz.choice_3_content }}</button>
+                            onclick="submitAnswer(3)">{{ quiz.choice_3_content }}</button>
                 </div>
                 <div class="col answer">
                     <button type="button" class="button4" value="4" name="btn"
-                            onclick="SubmitAnswer({{ quiz.id }}, 4, {{ length }})">{{ quiz.choice_4_content }}</button>
+                            onclick="submitAnswer(4)">{{ quiz.choice_4_content }}</button>
                 </div>
                 <div class="col">
                 </div>
@@ -80,9 +79,18 @@
         </div>
     </div>
 
-    <div id="data-para" data-role="{{ role }}" data-nickname="{{ nickname }}" data-qid="{{ quiz_id }}"></div>
+    <script>
+        const quizzes = {{ quizzes|safe }};
+        const role = "{{ role }}";
+        const nickname = "{{ nickname }}";
+        const session_id = {{ session_id }};
+        const quiz_length = {{ quiz_length }};
+        let qid = 0;
+        const leaderboardUrl = "{% url 'show_leaderboard' session_id=session_id %}";
 
-    <script src="{% static 'js/runQuiz.js' %}" onload="loadSetting()"></script>
+        console.log(quizzes);
+    </script>
+    <script src="{% static 'js/runQuiz.js' %}" onload="loadSetting()"?v=3.2></script>
 
 {% endblock %}
 

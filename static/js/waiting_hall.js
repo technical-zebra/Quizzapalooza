@@ -12,7 +12,7 @@ function loadSetting() {
     nickname = identity.dataset.nickname;
 
     console.log("You are ", role, " - ", nickname);
-
+    console.log(session_id)
     let url = `ws://${window.location.host}/ws/socket-server/${session_id}/`
 
     lobbySocket = new WebSocket(url);
@@ -55,7 +55,7 @@ function loadSetting() {
 function startQuiz() {
 
     if (role === 'teacher') {
-        lobbySocket.send(JSON.stringify({action: 'begin quiz', data: session_id.toString()}));
+        lobbySocket.send(JSON.stringify({action: 'begin quiz', data: {nickname: nickname, session_id: session_id.toString(), teacher_id: teacher_id}}));
         return;
     }
     return "";

@@ -136,7 +136,7 @@ class JoinQuizForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Ënter Session ID"
+                "placeholder": "Enter Session ID"
                     }
         )
     )

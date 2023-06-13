@@ -3,8 +3,7 @@ import random
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from .utils import connect_to_mongodb
 
 from .models import Quiz
 
@@ -97,7 +96,7 @@ def start_session(request, session_id, nickname=''):
 
     if request.user.is_authenticated:
         role = 'teacher'
-        current_sessions[session_id] = {"teacher": request.user, "students": []}
+        current_sessions[session_id] = {"teacher": request.user, "students": [], 'answers': []}
         print(current_sessions)
     else:
         role = 'student'
@@ -108,59 +107,70 @@ def start_session(request, session_id, nickname=''):
         'role': role
     }
     students = current_sessions[session_id]["students"]
-
-    return render(request, 'waiting_hall.html', {'identity': identity, 'students': students, 'session_id': session_id})
+    teacher_id = str(request.user)
+    return render(request, 'waiting_hall.html',
+                  {'identity': identity, 'students': students, 'session_id': session_id, 'teacher_id': teacher_id})
 
 
 def start_quiz(request, session_id, nickname, qid=0):
     qid = int(qid)
     teacher = current_sessions[session_id]["teacher"]
+    teacher_name = str(teacher).split("@")[0]
     quizzes = Quiz.objects.filter(user=teacher)
+    quiz_length = len(quizzes)
+    quiz = quizzes[0]
 
     role = "student"
     if request.user.is_authenticated:
         role = "teacher"
         nickname = str(request.user).split("@")[0]
+        if nickname != teacher_name:
+            messages.error(request, 'Cannot join a room that already have a teacher!')
+            redirect('home')
+
+        current_sessions[session_id]["answers"] = [q.answer_id for q in quizzes]
 
     if len(quizzes) == 0:
         messages.error(request, 'No questions in database')
         return redirect('home')
+
+    quizzes = json.dumps(list(
+        Quiz.objects.filter(user=teacher).values("content", "choice_1_content", "choice_2_content", "choice_3_content",
+                                                 "choice_4_content")))
+
+    print(f"quizzes: {quizzes}")
+    print(f"answers: {current_sessions[session_id]['answers']}")
     return render(request, 'run_quiz.html',
-                  {'quiz_id': quizzes[qid], 'length': len(quizzes), 'role': role, 'nickname': nickname})
+                  {'quizzes': quizzes, 'quiz': quiz, 'quiz_length': quiz_length, 'role': role,
+                   'nickname': nickname,
+                   'session_id': session_id})
 
 
-def get_leaderboard(request, session_id):
-    sorted_students = dict(sorted(current_sessions[session_id]['students'], key=lambda item: item[1], reverse=True))
-    print(sorted_students)
-    logout(request)
-    return render(request, 'leaderboard.html', {'current_students': sorted_students, 'user': request.user})
+def get_students_scores(session_id):
+    db = connect_to_mongodb()
+
+    students_scores = {}
+    answers = db['answer'].find({'session_id': session_id})
+    for answer in answers:
+        student_name = answer['student_name']
+        correctness = answer['correctness']
+        score = 1 if correctness else 0
+        if student_name in students_scores:
+            students_scores[student_name] += score
+        else:
+            students_scores[student_name] = score
+    return students_scores
 
 
-def send_answer(request):
-    """
-    This function receives a POST request with answer data, checks if the answer is correct, updates a
-    dictionary of current students' scores, and returns an empty JSON response.
-    :return: A JSON response with an empty object.
-    """
-    content = json.loads(request.body)
-    ans = content['ans']
-    quiz_id = content['quizId']
-    nickname = content['nickname']
-    quiz = get_object_or_404(Quiz, id=quiz_id)
-    print(quiz)
-    print(ans)
-    if ans == 0:
-        correctness = False
-        print(f"ans: {ans} correctness: {correctness}")
-    else:
-        example_ans = quiz.answer_id
-        correctness = False
-        if ans == example_ans:
-            correctness = True
-            # current_students[nickname] += 1
-        print(f"ans: {ans} ex_ans: {example_ans} correctness: {correctness}")
+def show_leaderboard(request, session_id):
+    students_scores = get_students_scores(session_id)
+    ranked_scores = sorted(students_scores.items(), key=lambda x: x[1], reverse=True)
+    ranking = []
+    for rank, (student_name, score) in enumerate(ranked_scores, start=1):
+        print(f"Rank {rank}: {student_name} - Score: {score}")
+        ranking.append((rank, student_name, score))
 
-    return JsonResponse({})
+    return render(request, 'leaderboard.html', {'ranking': ranking})
 
 
 @csrf_exempt
