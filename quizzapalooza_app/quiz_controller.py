@@ -8,7 +8,6 @@ from django.urls import reverse
 
 from .models import Quiz
 
-
 # - `current_sessions` is an empty list that will be used to store information about currently active
 # quiz sessions.
 current_sessions = {}
@@ -84,7 +83,8 @@ def display_quiz(request):
     quizs = Quiz.objects.all()
     return render(request, 'display_quiz.html', {'quizs': quizs, 'user': request.user})
 
-@ login_required(login_url='/login')
+
+@login_required(login_url='/login')
 def run_quiz(request):
     session_id = random.randint(20001, 40000)
     while session_id in current_sessions:
@@ -97,7 +97,7 @@ def start_session(request, session_id, nickname=''):
 
     if request.user.is_authenticated:
         role = 'teacher'
-        current_sessions[session_id] = {"teachers": [], "students": []}
+        current_sessions[session_id] = {"teacher": request.user, "students": []}
         print(current_sessions)
     else:
         role = 'student'
@@ -109,15 +109,24 @@ def start_session(request, session_id, nickname=''):
     }
     students = current_sessions[session_id]["students"]
 
-    return render(request, 'waiting_hall.html', {'identity': identity, 'students': students, 'session_id':session_id})
+    return render(request, 'waiting_hall.html', {'identity': identity, 'students': students, 'session_id': session_id})
 
-def start_quiz(request, session_id, qid=0):
+
+def start_quiz(request, session_id, nickname, qid=0):
     qid = int(qid)
-    quizs = Quiz.objects.all()
-    if len(quizs) == 0:
+    teacher = current_sessions[session_id]["teacher"]
+    quizzes = Quiz.objects.filter(user=teacher)
+
+    role = "student"
+    if request.user.is_authenticated:
+        role = "teacher"
+        nickname = str(request.user).split("@")[0]
+
+    if len(quizzes) == 0:
         messages.error(request, 'No questions in database')
         return redirect('home')
-    return render(request, 'run_quiz.html', {'quiz': quizs[qid], 'length': len(quizs), 'user': request.user})
+    return render(request, 'run_quiz.html',
+                  {'quiz_id': quizzes[qid], 'length': len(quizzes), 'role': role, 'nickname': nickname})
 
 
 def get_leaderboard(request, session_id):
@@ -148,10 +157,11 @@ def send_answer(request):
         correctness = False
         if ans == example_ans:
             correctness = True
-            #current_students[nickname] += 1
+            # current_students[nickname] += 1
         print(f"ans: {ans} ex_ans: {example_ans} correctness: {correctness}")
 
     return JsonResponse({})
+
 
 @csrf_exempt
 @login_required(login_url='/login')

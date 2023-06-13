@@ -15,6 +15,6 @@ urlpatterns = [
     path('delete_quiz/', quiz.delete_quiz, name='delete_quiz'),
     path('start_session/<int:session_id>/<str:nickname>/', quiz.start_session, name='start_session_with_nickname'),
     path('start_session/<int:session_id>/', quiz.start_session, name='start_session'),
-    path('quiz_session/<int:session_id>/<int:qid>/', quiz.start_quiz, name='run_test'),
+    path('quiz_session/<int:session_id>/<int:qid>/<str:nickname>/ ', quiz.start_quiz, name='start_quiz'),
     path('join_quiz/', quiz.join_quiz, name='join_quiz')
 ]

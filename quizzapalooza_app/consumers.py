@@ -4,44 +4,83 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class QuizConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.room_name = str(self.scope["url_route"]["kwargs"]["room_name"])
+        print(f'room_name: {self.room_name}')
+
+        await self.channel_layer.group_add(
+            self.room_name,
+            self.channel_name
+        )
+
         await self.accept()
 
         await self.send(text_data=json.dumps({
-            'type': 'connection_established',
-            'message': 'You are now connected!'
+            'action': 'request identity',
+            'message': ''
         }))
 
     async def disconnect(self, close_code):
-        # Perform any necessary cleanup
         await self.send(text_data='Goodbye! You are now disconnected.')
 
     async def receive(self, text_data):
         # Handle received messages
-        text_data_json = json.loads(text_data)
-        action = text_data_json['action']
-        data = text_data_json['data']
+        message = json.loads(text_data)
+        print(f'test_data: ', text_data)
 
-        if action == 'begin quiz':
-            await self.begin_quiz(data)
-        elif action == 'next quiz':
+        message_action = message.get('action')
+        data = message.get('data')
+        print(f"action: {message_action}, data: {data}")
+
+        if message_action == 'begin quiz':
+            group_name = data
+
+            await self.channel_layer.group_send(
+                group_name,
+                {
+                    'type': 'broadcast_message',
+                    'action': 'begin quiz',
+                    'data': data,
+                }
+            )
+
+        elif message_action == 'next quiz':
             await self.next_quiz(data)
-        elif action == 'join hall':
-            await self.join_hall(data)
-        elif action == 'my_event':
+
+        elif message_action == 'student join hall' or 'teacher join hall':
+            role = data['role']
+            nickname = data['nickname']
+            session_id = data['room']
+
+            await self.send(text_data=json.dumps({
+                'action': 'connection established',
+                'message': f'Welcome {role} {nickname} join session {session_id}!'
+            }))
+
+            if role == 'student':
+                await self.channel_layer.group_send(
+                    session_id,
+                    {
+                        'type': 'broadcast_message',
+                        'action': 'student join hall',
+                        'data': nickname,
+                    }
+                )
+
+        elif message_action == 'my_event':
             await self.my_event(data)
-        elif action == 'my_broadcast_event':
+        elif message_action == 'my_broadcast_event':
             await self.my_broadcast_event(data)
 
-    async def begin_quiz(self, event):
-        # Handle 'begin quiz' event
-        pass
+    async def broadcast_message(self, event):
+        print(f'broadcast_message: {event}')
+
+        await self.send(text_data=json.dumps({
+            "action": event['action'],
+            "data": event['data']
+        }))
 
     async def next_quiz(self, event):
         # Handle 'next quiz' event
-        pass
-
-    async def join_hall(self, event):
-        # Handle 'join hall' event
         pass
 
     async def my_event(self, event):
@@ -51,5 +90,3 @@ class QuizConsumer(AsyncWebsocketConsumer):
     async def my_broadcast_event(self, event):
         # Handle 'my broadcast event' event
         pass
-
-

@@ -44,8 +44,8 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = 'Quizzapalooza.asgi.application'
 
 CHANNEL_LAYERS = {
-    'default':{
-        'BACKEND':'channels.layers.InMemoryChannelLayer'
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     }
 }
 
@@ -78,7 +78,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Quizzapalooza.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -149,8 +148,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = '/static/'
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

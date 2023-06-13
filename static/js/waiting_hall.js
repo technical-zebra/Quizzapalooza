@@ -13,36 +13,34 @@ function loadSetting() {
 
     console.log("You are ", role, " - ", nickname);
 
-    let url = `ws://${window.location.host}/ws/socket-server/`
+    let url = `ws://${window.location.host}/ws/socket-server/${session_id}/`
 
-    lobbySocket = new WebSocket(url)
+    lobbySocket = new WebSocket(url);
 
-    lobbySocket.onopen = function () {
-        if (identity === 'student') {
-            document.getElementById('TeacherBlock').style.display = 'none';
-            lobbySocket.send(JSON.stringify({action: 'new_student_join', data: nickname}));
-        } else if (identity === 'teacher') {
-            lobbySocket.send(JSON.stringify({action: 'new_teacher_join', data: nickname}));
-        }
-    };
 
     lobbySocket.onmessage = function (e) {
-        let message = JSON.parse(e.data)
-        console.log('Message: ', message)
-        if (message.action === 'redirect') {
-            lobbySocket.send(JSON.stringify({action: 'my_event', data: 'Q1'}));
-            window.location.href = "/run_test/0";
-        } else if (message.action === 'new_student_join') {
+        let message = JSON.parse(e.data);
+        console.log('Message: ', message);
+        if (message.action === 'begin quiz') {
+            window.location.href = startQuizUrl;
+        } else if (message.action === 'student join hall') {
             $('#log').append('<div class="col">' + $('<div/>').text(message.data).html() + '</div>');
+        } else if (message.action === 'request identity') {
+            if (role === 'student') {
+                document.getElementById('TeacherBlock').style.display = 'none';
+            }
+            const action = role === 'teacher' ? 'teacher join hall' : 'student join hall';
+            lobbySocket.send(JSON.stringify({action: action, data: { role: role, nickname: nickname, room: session_id.toString()}}));
+
         }
 
     };
 
     lobbySocket.onclose = function () {
-        if (identity === 'student') {
-            lobbySocket.send(JSON.stringify({action: 'student_exit', data: nickname}));
-        } else if (identity === 'teacher') {
-            lobbySocket.send(JSON.stringify({action: 'teacher_exit', data: nickname}));
+        if (role === 'student') {
+            lobbySocket.send(JSON.stringify({action: 'student exit', data: nickname}));
+        } else if (role === 'teacher') {
+            lobbySocket.send(JSON.stringify({action: 'teacher exit', data: nickname}));
         }
     };
 
@@ -56,9 +54,9 @@ function loadSetting() {
  */
 function startQuiz() {
 
-    if (identity === 'student') {
-        lobbySocket.send(JSON.stringify({action: 'quiz_begin', data: nickname}));
+    if (role === 'teacher') {
+        lobbySocket.send(JSON.stringify({action: 'begin quiz', data: session_id.toString()}));
         return;
     }
-    return;
+    return "";
 }

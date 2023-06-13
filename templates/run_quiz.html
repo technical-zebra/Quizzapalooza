@@ -5,7 +5,6 @@
 {% block reference %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/run_quiz.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
-    <script src="{% static 'js/runQuiz.js' %}" onload="loadSetting()"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 {% endblock %}
@@ -79,12 +78,11 @@
                 </button>
             </div>
         </div>
-        <div class="row m_row">
-            <div class=" identity" id="identity">{{ user.type }}</div>
-            <div class=" nickname" id="nickname">{{ user.email.split("@")[0] }}</div>
-        </div>
     </div>
 
+    <div id="data-para" data-role="{{ role }}" data-nickname="{{ nickname }}" data-qid="{{ quiz_id }}"></div>
+
+    <script src="{% static 'js/runQuiz.js' %}" onload="loadSetting()"></script>
 
 {% endblock %}
 
