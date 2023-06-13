@@ -16,15 +16,16 @@
 
 
 
-        {% for nickname,score in current_students.items() %}
+        {% for rank,student_name,score in ranking %}
             <div class="row">
             <div class="col-3">
+                {{ rank }}
             </div>
             <div class="col-3">
-            {{ nickname }}:
+                {{ student_name }}:
             </div>
             <div class="col-3">
-            {{ score }}
+                {{ score }}
             </div>
             <div class="col-3">
             </div>
