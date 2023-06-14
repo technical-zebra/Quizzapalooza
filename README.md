@@ -78,7 +78,7 @@ Another challenge I faced was storing and managing quiz and competition data. To
 
 
 ### Winner Page
-![Winner Page](https://github.com/technical-zebra/Coursework_3405/blob/main/Screenshots/Picture11.png "Winner Page")
+![Winner Page](https://github.com/technical-zebra/Quizzapalooza/blob/main/screenshots/leaderboard.png "Winner Page")
 
 ## Getting Started
 
