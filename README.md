@@ -27,7 +27,7 @@ Quizzapalooza is a web application developed using HTML, CSS, JavaScript, and Dj
 - Competition session: Quizzes are conducted in a competitive environment with both teachers and students.
 - Efficient server-client communication: Django channels and jQuery are used for real-time communication.
 - Database integration: PostgreSQL is used for quiz data storage, while MongoDB is used for competition data storage.
-- CI/CD pipeline: A GitLab CI/CD pipeline is set up for testing, building Docker images, and deployment to Azure.
+- CI/CD pipeline: A GitLab CI/CD pipeline is set up for testing, building Docker images and store in Docker hub, and deployment to Azure.
 
 
 ## Challenges and different implementation options
