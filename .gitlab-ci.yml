@@ -1,0 +1,77 @@
+stages:
+  - build
+  - test
+  - release
+  - deploy
+
+services:
+  - docker:dind
+  - mongo:latest
+  - postgres:latest
+
+variables:
+  MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+  MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+  POSTGRES_USER: $POSTRES_USERNAME
+  POSTGRES_PASSWORD: $POSTRES_PASSWORD
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_PIPELINE_IID
+
+build-job:
+  tags:
+    - vm-shell
+  stage: build
+  script:
+    - echo "Creating virtual environment for the project..."
+    - virtualenv $(pwd)/venv
+    - source $(pwd)/venv/bin/activate
+    - echo "Installing requirements..."
+    - pip install -r requirements.txt
+    - deactivate
+  artifacts:
+    paths:
+      - $(pwd)/venv
+
+test-job:
+  tags:
+    - vm-shell
+  stage: test
+  script:
+    - echo "Activating virtual environment..."
+    - source $(pwd)/venv/bin/activate
+    - echo "Running unit tests..."
+    - python manage.py test quizzapalooza_app
+    - echo "Checking the server..."
+    - python manage.py runserver &
+    - sleep 10
+    - curl -sSf http://localhost:8000 > /dev/null && echo "Server is Up"
+    - sudo pkill python
+    - deactivate
+    - echo "All tests successfully passed."
+
+release-job:
+  tags:
+    - vm-shell
+  stage: release
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
+  after_script:
+    - docker logout
+
+deploy-job:
+  tags:
+    - vm-shell
+  stage: deploy
+  before_script:
+    - az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT_ID
+  script:
+    - az group create --name myResourceGroup --location eastus
+    - az acr create --resource-group myResourceGroup --name myRegistry --sku Basic
+    - az acr login --name myRegistry
+    - az acr import --name myRegistry --source $CONTAINER_IMAGE --image quizzapalooza:latest
+    - az appservice plan create --name myAppServicePlan --resource-group myResourceGroup --sku B1 --is-linux
+    - az webapp create --resource-group myResourceGroup --plan myAppServicePlan --name quizzapalooza --deployment-container-image-name myRegistry.azurecr.io/quizzapalooza:latest
+    - az webapp config appsettings set --resource-group myResourceGroup --name quizzapalooza --settings WEBSITES_PORT=8000
+    - az webapp config container set --name quizzapalooza --resource-group myResourceGroup --docker-custom-image-name myRegistry.azurecr.io/quizzapalooza:latest --docker-registry-server-url https://myRegistry.azurecr.io --docker-registry-server-user $AZURE_APP_ID --docker-registry-server-password $AZURE_PASSWORD
