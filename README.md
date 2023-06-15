@@ -257,8 +257,6 @@ Django: A high-level Python web framework used for rapid development, providing 
 
 Django Channels: A library that extends Django's capabilities to handle real-time communication and WebSocket protocols, enabling efficient server-client communication during quiz sessions.
 
-djongo: A MongoDB connector for Django that allows seamless integration with MongoDB, facilitating the storage and retrieval of competition data in a NoSQL database.
-
 pymongo: A Python driver for MongoDB, providing an interface to interact with the MongoDB database and perform operations like data insertion, retrieval, and querying.
 
 psycopg2: A PostgreSQL adapter for Python that enables Django to connect and interact with a PostgreSQL database, ensuring efficient storage and retrieval of quiz-related information.
