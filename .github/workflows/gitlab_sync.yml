@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - uses: technical-zebra/Quizzapalooza@main
+    - uses: technical-zebra/Quizzapalooza@master
       with:
         target-url: ${{ secrets.TARGET_URL }}
         target-username: ${{ secrets.TARGET_USERNAME }}
