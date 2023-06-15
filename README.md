@@ -269,6 +269,4 @@ daphne: An HTTP and WebSocket protocol server for Django, used in conjunction wi
 
 pytz: A Python library that provides timezone definitions and utilities, ensuring accurate timezone conversions and handling in the application.
 
-six: A compatibility library that provides Python 2 and 3 compatibility utilities, facilitating code compatibility and smooth transitions between Python versions.
-
 
