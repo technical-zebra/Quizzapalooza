@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -62,6 +62,7 @@ def register_view(request):
 
             if password and confirm_password and password != confirm_password:
                 messages.error(request, "Passwords do not match!")
+                return render(request, 'register.html', {'form': form})
 
             else:
                 user = User.objects.filter(email=email).first()

@@ -3,9 +3,15 @@ import random
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils import connect_to_mongodb
 
 from .models import Quiz
+from .utils import connect_to_mongodb
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+from .forms import JoinQuizForm, QuizForm
 
 # - `current_sessions` is an empty list that will be used to store information about currently active
 # quiz sessions.
@@ -14,15 +20,6 @@ current_sessions = {}
 
 def validate_activation(request):
     return HttpResponse("Django app is activated!")
-
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-
-from .forms import JoinQuizForm, QuizForm
 
 
 @login_required(login_url='/login')
@@ -79,8 +76,8 @@ def create_quiz(request):
 
 @login_required(login_url='/login')
 def display_quiz(request):
-    quizs = Quiz.objects.all()
-    return render(request, 'display_quiz.html', {'quizs': quizs, 'user': request.user})
+    quizzes = Quiz.objects.all()
+    return render(request, 'display_quiz.html', {'quizzes': quizzes, 'user': request.user})
 
 
 @login_required(login_url='/login')
@@ -125,8 +122,8 @@ def start_quiz(request, session_id, nickname, qid=0):
         role = "teacher"
         nickname = str(request.user).split("@")[0]
         if nickname != teacher_name:
-            messages.error(request, 'Cannot join a room that already have a teacher!')
-            redirect('home')
+            messages.error(request, 'Cannot join a room that already has a teacher!')
+            return redirect('home')
 
         current_sessions[session_id]["answers"] = [q.answer_id for q in quizzes]
 
