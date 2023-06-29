@@ -82,27 +82,27 @@ WSGI_APPLICATION = 'Quizzapalooza.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#             'ENGINE': 'django.db.backends.django.db.backends.postgresql',
-#             'NAME': 'quizzapalooza_pgsql',
-#             'USER': 'admin',
-#             'PASSWORD': 'admin',
-#             'HOST': 'localhost',
-#             'PORT': '5432',
-#         }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'quizzapaloozapgsql',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'quizzapalooza_sql',
+            'USER': 'admin',
+            'PASSWORD': 'admin',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'quizzapaloozapgsql',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

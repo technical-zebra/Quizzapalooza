@@ -7,8 +7,8 @@ from django.shortcuts import render, redirect
 
 from .forms import JoinQuizForm
 from .models import Quiz
-from .utils import connect_to_mongodb
-from .quiz_sessions import current_sessions
+#from .utils import connect_to_mongodb
+from .quiz_sessions import current_sessions, all_answers
 
 
 def validate_activation(request):
@@ -84,10 +84,11 @@ def start_quiz(request, session_id, nickname, qid=0):
                    'session_id': session_id})
 
 def get_students_scores(session_id):
-    db = connect_to_mongodb()
+    #db = connect_to_mongodb()
 
     students_scores = {}
-    answers = db['answer'].find({'session_id': session_id})
+    answers = all_answers
+    #answers = db['answer'].find({'session_id': session_id})
     for answer in answers:
         student_name = answer['student_name']
         correctness = answer['correctness']

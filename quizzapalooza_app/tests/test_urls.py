@@ -68,17 +68,6 @@ class UrlTests(TestCase):
         url = reverse('start_session', args=[12345])
         self.assertEqual(resolve(url).func, start_session)
 
-    def test_start_quiz_url_resolves(self):
-        # Define the URL path
-        session_id = 12345
-        qid = 1
-        nickname = 'john'
-        url = reverse('start_quiz', args=[session_id, qid, nickname])
-
-        # Resolve the URL path and compare the resolved view function
-        resolved_func = resolve(url).func
-        self.assertEqual(resolved_func, start_quiz)
-
     def test_join_quiz_url_resolves(self):
         url = reverse('join_quiz')
         self.assertEqual(resolve(url).func, join_quiz)

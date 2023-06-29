@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .utils import connect_to_mongodb
-from .quiz_controller import current_sessions
+#from .utils import connect_to_mongodb
+from .quiz_controller import current_sessions, all_answers
 
 
 class QuizConsumer(AsyncWebsocketConsumer):
@@ -97,7 +97,7 @@ class QuizConsumer(AsyncWebsocketConsumer):
         }))
 
     async def create_record(self, data):
-        db = connect_to_mongodb()
+        #db = connect_to_mongodb()
         try:
             session_number = int(data.get('session_id'))
             teacher_name = data.get('nickname')
@@ -108,12 +108,13 @@ class QuizConsumer(AsyncWebsocketConsumer):
                 'teacher_name': teacher_name,
                 'teacher_id': teacher_id
             }
-            db['record'].insert_one(record)
+            #db['record'].insert_one(record)
+
         except Exception as e:
             print(f"Unable to save record: {data}, Error: {str(e)}")
 
     async def create_answer(self, data):
-        db = connect_to_mongodb()
+        #db = connect_to_mongodb()
         try:
             user_choice = data.get('ans')
             question_id = data.get('quizId')
@@ -128,6 +129,8 @@ class QuizConsumer(AsyncWebsocketConsumer):
                 'correctness': correctness,
                 'student_name': nickname
             }
-            db['answer'].insert_one(answer)
+            #db['answer'].insert_one(answer)
+            all_answers.append(answer)
+
         except Exception as e:
             print(f"Unable to save answer: {data}, Error: {str(e)}")
